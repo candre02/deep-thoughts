@@ -30,7 +30,7 @@ const Signup = () => {
     });
   };
 
-  // submit form (notice the async!) 
+  // submit form 
   // async/await instead of .then() and .catch()
   const handleFormSubmit = async (event) => {
     event.preventDefault();
