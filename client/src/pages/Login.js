@@ -1,14 +1,22 @@
 // import files
 import React, { useState } from 'react';
 
-const Login = props => {
+import { useMutation } from '@apollo/client';
+import { LOGIN_USER } from '../utils/mutations';
+
+// import AuthService from utils dir and auth file
+import Auth from '../utils/auth';
+
+const Login = (props) => {
   const [formState, setFormState] = useState({ email: '', password: '' });
+  const [login, { error }] = useMutation(LOGIN_USER);
 
   // update state based on form input changes
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
 
     setFormState({
+      // ... spread operator
       ...formState,
       [name]: value
     });
@@ -17,6 +25,20 @@ const Login = props => {
   // submit form
   const handleFormSubmit = async event => {
     event.preventDefault();
+
+     // use try/catch instead of promises to handle errors "try again"
+    try {
+      // execute login mutation and pass in variable data from form
+      const { data } = await login({
+        // ... spread operator
+        // variables to be an obj with key/value pair, match w/ formState obj  
+        variables: { ...formState }
+      });
+  
+      Auth.login(data.login.token);
+    } catch (e) {
+      console.error(e);
+    }
 
     // clear form values
     setFormState({
@@ -54,6 +76,8 @@ const Login = props => {
                 Submit
               </button>
             </form>
+
+            {error && <div>Login failed</div>}
           </div>
         </div>
       </div>

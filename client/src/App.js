@@ -10,12 +10,16 @@ import {
   createHttpLink,
 } from "@apollo/client";
 
+// import statement @apollo/client
+import { setContext } from '@apollo/client/link/context';
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-import Home from "./pages/Home";
+
 
 // import page components
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NoMatch from "./pages/NoMatch";
 import SingleThought from "./pages/SingleThought";
@@ -26,8 +30,22 @@ const httpLink = createHttpLink({
   uri: "/graphql",
 });
 
+// setContext: create a middleware function that will retrieve the token, combine it with httpLink
+// authLink: setContext() to retrieve the token from localStorage, set the HTTP req headers of evry req to include the token
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+  return {
+    headers: {
+      // ... spread operator
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
 const client = new ApolloClient({
-  link: httpLink,
+  // combine authlink and httplink
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 

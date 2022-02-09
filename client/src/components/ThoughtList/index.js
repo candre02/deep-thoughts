@@ -21,7 +21,7 @@ const ThoughtList = ({ thoughts, title }) => {
                 className="text-light"
               >
                 {thought.username}
-              </Link>{" "}
+              </Link>{' '}
               thought on {thought.createdAt}
             </p>
             <div className="card-body">
