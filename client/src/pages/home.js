@@ -1,3 +1,4 @@
+// import files
 import React from 'react';
 import ThoughtList from '../components/ThoughtList';
 
